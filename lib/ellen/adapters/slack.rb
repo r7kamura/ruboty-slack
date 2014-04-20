@@ -1,4 +1,5 @@
 require "zircon"
+require "yaml"
 
 module Ellen
   module Adapters
@@ -62,11 +63,7 @@ module Ellen
 
       def bind
         client.on_message do |message|
-          puts message
-          puts message.from
-          puts message.to
-          puts message.type
-          puts message.body
+          puts message.to_hash.to_yaml
         end
       end
 
