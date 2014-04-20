@@ -1,29 +1,17 @@
 # Ellen::Slack
-
-TODO: Write a gem description
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'ellen-slack'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install ellen-slack
+Slack adapter for [Ellen](https://github.com/r7kamura/ellen).
 
 ## Usage
+Note that you must enable the IRC gateway at https://my.slack.com/admin/settings.
 
-TODO: Write usage instructions here
+```
+# Gemfile
+gem "ellen-slack"
+```
 
-## Contributing
-
-1. Fork it ( https://github.com/[my-github-username]/ellen-slack/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+## ENV
+```
+SLACK_TEAM - Account's team name
+SLACK_USER - Account's username, which must match the name on Slack account
+SLACK_PASS - Account's IRC password (See https://my.slack.com/account/gateways)
+```
