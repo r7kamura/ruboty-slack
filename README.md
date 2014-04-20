@@ -11,7 +11,8 @@ gem "ellen-slack"
 
 ## ENV
 ```
-SLACK_TEAM - Account's team name
-SLACK_USER - Account's username, which must match the name on Slack account
-SLACK_PASS - Account's IRC password (See https://my.slack.com/account/gateways)
+SLACK_TEAM     - Account's team name
+SLACK_USERNAME - Account's username, which must match the name on Slack account
+SLACK_PASSWORD - Account's IRC password (See https://my.slack.com/account/gateways)
+SLACK_CHANNEL  - Channel name the bot logs in at first
 ```
