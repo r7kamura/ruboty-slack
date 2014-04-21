@@ -10,14 +10,13 @@ module Ellen
       env :SLACK_USERNAME, "Account's username, which must match the name on Slack account"
       env :SLACK_NO_SSL, "Pass 1 if you don't want to use SSL connection", optional: true
 
-      # TODO
       def run
         bind
         connect
       end
 
-      # TODO
       def say(body, options = {})
+        client.privmsg(channel, ":#{body}")
       end
 
       private
@@ -62,8 +61,8 @@ module Ellen
       end
 
       def bind
-        client.on_message do |message|
-          puts message.to_hash.to_yaml
+        client.on_privmsg do |message|
+          robot.receive(body: message.body)
         end
       end
 
