@@ -62,7 +62,8 @@ module Ellen
 
       def bind
         client.on_privmsg do |message|
-          robot.receive(body: message.body)
+          body = message.body.force_encoding("UTF-8")
+          robot.receive(body: body)
         end
       end
 
