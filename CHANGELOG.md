@@ -1,3 +1,6 @@
+## 0.0.4
+* Support Ellen v0.2.0
+
 ## 0.0.3
 * Support multiline message
 
