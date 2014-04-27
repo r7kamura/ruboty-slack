@@ -17,9 +17,11 @@ module Ellen
         connect
       end
 
-      def say(body, options = {})
-        body.split("\n").each do |line|
-          client.privmsg(channel, ":#{line}")
+      def say(message)
+        to = message[:to]
+        to = message[:from] if to == robot.name
+        message[:body].split("\n").each do |line|
+          client.privmsg(to, ":#{line}")
           wait
         end
       end
@@ -68,7 +70,7 @@ module Ellen
       def bind
         client.on_privmsg do |message|
           body = message.body.force_encoding("UTF-8")
-          robot.receive(body: body)
+          robot.receive(body: body, from: message.from, to: message.to)
         end
       end
 
