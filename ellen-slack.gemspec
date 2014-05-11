@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "ellen", ">= 0.2.0"
-  spec.add_dependency "zircon", ">= 0.0.8"
+  spec.add_dependency "xrc"
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
 end
