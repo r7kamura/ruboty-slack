@@ -1,16 +1,12 @@
-require "zircon"
-require "yaml"
+require "xrc"
 
 module Ellen
   module Adapters
     class Slack < Base
-      INTERVAL = 0.1
-
-      env :SLACK_CHANNEL, "Channel name the bot logs in at first"
-      env :SLACK_PASSWORD, "Account's IRC password (See https://my.slack.com/account/gateways)"
-      env :SLACK_TEAM, "Account's team name"
-      env :SLACK_USERNAME, "Account's username, which must match the name on Slack account"
-      env :SLACK_NO_SSL, "Pass 1 if you don't want to use SSL connection", optional: true
+      env :SLACK_PASSWORD, "Account's XMPP password (See https://tqhouse.slack.com/account/gateways)"
+      env :SLACK_ROOM, "Room name to join in at first (e.g. general)"
+      env :SLACK_TEAM, "Account's team name (e.g. wonderland)"
+      env :SLACK_USERNAME, "Account's username (e.g. alice)"
 
       def run
         bind
@@ -18,37 +14,43 @@ module Ellen
       end
 
       def say(message)
-        to = message[:to]
-        to = message[:from] if to == robot.name
-        message[:body].split("\n").each do |line|
-          client.privmsg(to, ":#{line}")
-          wait
-        end
+        client.say(
+          body: message[:body],
+          from: message[:from],
+          to: message[:original][:type] == "chat" ? message[:to] : message[:to] + "/resource",
+          type: message[:original][:type],
+        )
       end
 
       private
 
       def client
-        @client ||= Zircon.new(
-          channel: channel,
+        @client ||= Xrc::Client.new(
+          jid: jid,
+          nickname: username,
           password: password,
-          port: port,
-          server: server,
-          username: username,
-          use_ssl: ssl,
+          room_jid: room_jid,
         )
       end
 
-      def channel
-        ENV["SLACK_CHANNEL"]
+      def jid
+        "#{username}@#{host}"
       end
 
-      def port
-        "6667"
+      def room_jid
+        "#{room}@#{room_host}"
       end
 
-      def server
-        "#{team}.irc.slack.com"
+      def host
+        "#{team}.xmpp.slack.com"
+      end
+
+      def room_host
+        "conference.#{host}"
+      end
+
+      def room
+        ENV["SLACK_ROOM"]
       end
 
       def username
@@ -63,26 +65,22 @@ module Ellen
         ENV["SLACK_TEAM"]
       end
 
-      def ssl
-        !ENV["SLACK_NO_SSL"]
-      end
-
       def bind
-        client.on_privmsg do |message|
-          body = message.body.force_encoding("UTF-8")
-          robot.receive(body: body, from: message.from, to: message.to)
-        end
+        client.on_private_message(&method(:on_message))
+        client.on_room_message(&method(:on_message))
       end
 
       def connect
-        client.run!
+        client.connect
       end
 
-      # Wait for Slack IRC Gateway to process message queue.
-      # If we send 2 messages in too short time,
-      # sometimes the slack double-renders the first message by mistake.
-      def wait
-        sleep(INTERVAL)
+      def on_message(message)
+        robot.receive(
+          body: message.body,
+          from: message.from,
+          to: message.to,
+          type: message.type,
+        )
       end
     end
   end
