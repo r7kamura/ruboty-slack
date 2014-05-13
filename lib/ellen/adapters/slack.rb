@@ -17,7 +17,7 @@ module Ellen
         client.say(
           body: message[:body],
           from: message[:from],
-          to: message[:original][:type] == "chat" ? message[:to] : message[:to] + "/resource",
+          to: message[:original][:type] == "chat" ? message[:to] + "/resource" : message[:to],
           type: message[:original][:type],
         )
       end
