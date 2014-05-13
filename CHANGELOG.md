@@ -1,3 +1,6 @@
+## 0.1.2
+* Format message body if :code option is passed
+
 ## 0.1.1
 * Fix private message handler
 
