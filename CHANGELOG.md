@@ -1,3 +1,6 @@
+## 0.1.1
+* Fix private message handler
+
 ## 0.1.0
 * Use XMPP Gateway instead of IRC
 
