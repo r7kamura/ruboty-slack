@@ -1,3 +1,6 @@
+## 0.1.0
+* Use XMPP Gateway instead of IRC
+
 ## 0.0.4
 * Support Ellen v0.2.0
 
