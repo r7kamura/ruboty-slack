@@ -1,3 +1,6 @@
+## 0.1.3
+* Support Ellen::Message#from_name
+
 ## 0.1.2
 * Format message body if :code option is passed
 
