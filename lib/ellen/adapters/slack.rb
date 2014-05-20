@@ -78,9 +78,19 @@ module Ellen
         robot.receive(
           body: message.body,
           from: message.from,
+          from_name: username_of(message),
           to: message.to,
           type: message.type,
         )
+      end
+
+      def username_of(message)
+        case message.type
+        when "groupchat"
+          Xrc::Jid.new(message.from).resource
+        else
+          Xrc::Jid.new(message.from).node
+        end
       end
     end
   end
