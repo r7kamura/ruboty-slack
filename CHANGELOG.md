@@ -1,3 +1,6 @@
+## 0.1.4
+* Rename: Ellen -> Ruboty
+
 ## 0.1.3
 * Support Ruboty::Message#from_name
 
