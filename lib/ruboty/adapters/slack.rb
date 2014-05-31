@@ -1,6 +1,6 @@
 require "xrc"
 
-module Ellen
+module Ruboty
   module Adapters
     class Slack < Base
       env :SLACK_PASSWORD, "Account's XMPP password (See https://tqhouse.slack.com/account/gateways)"

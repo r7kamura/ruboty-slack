@@ -1,12 +1,12 @@
-# Ellen::Slack
-Slack adapter for [Ellen](https://github.com/r7kamura/ellen).
+# Ruboty::Slack
+Slack adapter for [Ruboty](https://github.com/r7kamura/ruboty).
 
 ## Usage
 See https://my.slack.com/admin/settings to enable XMPP Gateway on Slack.
 
 ```ruby
 # Gemfile
-gem "ellen-slack"
+gem "ruboty-slack"
 ```
 
 ## ENV

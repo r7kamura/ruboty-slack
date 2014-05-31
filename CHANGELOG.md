@@ -1,5 +1,5 @@
 ## 0.1.3
-* Support Ellen::Message#from_name
+* Support Ruboty::Message#from_name
 
 ## 0.1.2
 * Format message body if :code option is passed
@@ -11,7 +11,7 @@
 * Use XMPP Gateway instead of IRC
 
 ## 0.0.4
-* Support Ellen v0.2.0
+* Support Ruboty v0.2.0
 
 ## 0.0.3
 * Support multiline message

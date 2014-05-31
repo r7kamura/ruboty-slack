@@ -1,4 +1,4 @@
-module Ellen
+module Ruboty
   module Slack
     VERSION = "0.1.3"
   end
