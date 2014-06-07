@@ -74,14 +74,17 @@ module Ruboty
         client.connect
       end
 
+      # @note Ignores delayed messages when ruboty was logging out
       def on_message(message)
-        robot.receive(
-          body: message.body,
-          from: message.from,
-          from_name: username_of(message),
-          to: message.to,
-          type: message.type,
-        )
+        unless message.delayed?
+          robot.receive(
+            body: message.body,
+            from: message.from,
+            from_name: username_of(message),
+            to: message.to,
+            type: message.type,
+          )
+        end
       end
 
       def username_of(message)

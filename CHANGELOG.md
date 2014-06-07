@@ -1,3 +1,6 @@
+## 0.1.5
+* Ignore delayed messages when ruboty was logging out
+
 ## 0.1.4
 * Rename: Ellen -> Ruboty
 
