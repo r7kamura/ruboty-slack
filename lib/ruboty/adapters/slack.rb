@@ -29,7 +29,7 @@ module Ruboty
           jid: jid,
           nickname: username,
           password: password,
-          room_jid: room_jid,
+          room_jid: room_jids.join(","),
         )
       end
 
@@ -37,8 +37,10 @@ module Ruboty
         "#{username}@#{host}"
       end
 
-      def room_jid
-        "#{room}@#{room_host}"
+      def room_jids
+        rooms.map do |room|
+          "#{room}@#{room_host}"
+        end
       end
 
       def host
@@ -49,8 +51,8 @@ module Ruboty
         "conference.#{host}"
       end
 
-      def room
-        ENV["SLACK_ROOM"]
+      def rooms
+        ENV["SLACK_ROOM"].split(",")
       end
 
       def username

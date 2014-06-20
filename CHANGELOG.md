@@ -1,3 +1,6 @@
+## 0.1.6
+* Support multi rooms
+
 ## 0.1.5
 * Ignore delayed messages when ruboty was logging out
 
