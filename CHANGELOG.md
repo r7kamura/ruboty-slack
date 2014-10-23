@@ -1,3 +1,6 @@
+## 0.1.7
+* Set RUBOTY_NAME to slack username if name not given
+
 ## 0.1.6
 * Support multi rooms
 
