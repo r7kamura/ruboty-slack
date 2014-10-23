@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "ruboty"
+  spec.add_dependency "ruboty", ">= 1.0.4"
   spec.add_dependency "xrc", ">= 0.0.6"
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"

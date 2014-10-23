@@ -9,6 +9,7 @@ module Ruboty
       env :SLACK_USERNAME, "Account's username (e.g. alice)"
 
       def run
+        init
         bind
         connect
       end
@@ -31,6 +32,10 @@ module Ruboty
           password: password,
           room_jid: room_jids.join(","),
         )
+      end
+
+      def init
+        ENV["RUBOTY_NAME"] ||= username
       end
 
       def jid
