@@ -1,3 +1,6 @@
+## 0.1.8
+* Fix error class loading problem
+
 ## 0.1.7
 * Set RUBOTY_NAME to slack username if name not given
 
