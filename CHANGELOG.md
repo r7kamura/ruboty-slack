@@ -1,3 +1,7 @@
+## 0.1.9
+* Use xrc v0.1.8 or later
+* Fix groupchat behavior
+
 ## 0.1.8
 * Fix error class loading problem
 
