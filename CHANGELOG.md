@@ -1,3 +1,6 @@
+## 0.1.11
+* Add missing comma
+
 ## 0.1.10
 * Fix groupchat behavior
 
