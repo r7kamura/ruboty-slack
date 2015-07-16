@@ -1,3 +1,6 @@
+## 0.1.12
+* Support the latest problem of Slack XMPP Gateway about groupchat with resource name
+
 ## 0.1.11
 * Add missing comma
 
