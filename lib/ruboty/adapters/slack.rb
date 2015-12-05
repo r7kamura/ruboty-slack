@@ -1,106 +1,96 @@
-require "xrc"
+require "slack"
+require "mem"
 
 module Ruboty
   module Adapters
     class Slack < Base
-      env :SLACK_PASSWORD, "Account's XMPP password (See https://tqhouse.slack.com/account/gateways)"
-      env :SLACK_ROOM, "Room name to join in at first (e.g. general)"
-      env :SLACK_TEAM, "Account's team name (e.g. wonderland)"
-      env :SLACK_USERNAME, "Account's username (e.g. alice)"
+      env :SLACK_API_TOKEN, "Account's API token (See https://api.slack.com/web#basics)"
+
+      include Mem
 
       def run
+        Ruboty.logger.debug("#{self.class}##{__method__} started")
         init
         bind
         connect
+        Ruboty.logger.debug("#{self.class}##{__method__} finished")
       end
 
       def say(message)
-        client.say(
-          body: message[:code] ? "```\n#{message[:body]}\n```" : message[:body],
-          from: message[:from],
-          to: message[:original][:type] == "chat" ? message[:to] + "/resource" : message[:to].split("/", 2).first,
-          type: message[:original][:type],
+        response = client.chat_postMessage(
+          channel: message[:original][:channel],
+          text: message[:code] ? "```\n#{message[:body]}\n```" : message[:body],
+          username: username,
+          as_user: true
         )
+        Ruboty.logger.debug("error: #{response["error"]}") unless response["ok"]
       end
 
       private
-
-      def client
-        @client ||= Xrc::Client.new(
-          jid: jid,
-          nickname: username,
-          password: password,
-          room_jid: room_jids.join(","),
-        )
-      end
 
       def init
         ENV["RUBOTY_NAME"] ||= username
       end
 
-      def jid
-        "#{username}@#{host}"
-      end
-
-      def room_jids
-        rooms.map do |room|
-          "#{room}@#{room_host}"
-        end
-      end
-
-      def host
-        "#{team}.xmpp.slack.com"
-      end
-
-      def room_host
-        "conference.#{host}"
-      end
-
-      def rooms
-        ENV["SLACK_ROOM"].split(",")
-      end
-
       def username
-        ENV["SLACK_USERNAME"]
+        client.auth_test["user"]
       end
-
-      def password
-        ENV["SLACK_PASSWORD"]
-      end
-
-      def team
-        ENV["SLACK_TEAM"]
-      end
+      memoize :username
 
       def bind
-        client.on_private_message(&method(:on_message))
-        client.on_room_message(&method(:on_message))
+        stream.on :message do |message|
+          on_message(message)
+        end
       end
 
       def connect
-        client.connect
+        stream.start
       end
 
-      # @note Ignores delayed messages when ruboty was logging out
       def on_message(message)
-        unless message.delayed?
-          robot.receive(
-            body: message.body,
-            from: message.from,
-            from_name: username_of(message),
-            to: message.to,
-            type: message.type,
-          )
-        end
+        Ruboty.logger.debug("#{message}")
+        robot.receive(
+          body: expand_message(message),
+          from: message["user"],
+          from_name: username_of(message),
+          channel: message["channel"],
+        )
+      end
+
+      def expand_message(message)
+        text = message["text"]
+        regex = /<(@(?<user_id>\w+))>/i
+        match = regex.match(text)
+        return text unless match
+        user_name = user_info(id: match[:user_id])["name"]
+        text.gsub(regex) {|w| "@#{user_name}" }
       end
 
       def username_of(message)
-        case message.type
-        when "groupchat"
-          Xrc::Jid.new(message.from).resource
-        else
-          Xrc::Jid.new(message.from).node
-        end
+        users.select{|user|  user["id"] == message["user"] }.first
+      end
+
+      def stream
+        ::Slack::RealTime::Client.new(client.post("rtm.start")["url"])
+      end
+      memoize :stream
+
+      # Web API
+
+      def client
+        ::Slack::Client.new(token: ENV["SLACK_API_TOKEN"])
+      end
+      memoize :client
+
+      def users
+        client.users_list["members"]
+      end
+      memoize :users
+
+      def user_info(args)
+        users.select {|member|
+          args.keys.inject(true) {|m, i| m and member[i.to_s] == args[i] }
+        }.first
       end
     end
   end
