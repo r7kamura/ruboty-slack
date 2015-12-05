@@ -59,11 +59,25 @@ module Ruboty
 
       def expand_message(message)
         text = message["text"]
-        regex = /<(@(?<user_id>\w+))>/i
-        match = regex.match(text)
-        return text unless match
-        user_name = user_info(id: match[:user_id])["name"]
-        text.gsub(regex) {|w| "@#{user_name}" }
+        special_command_regex = /<!(.*?)>/i
+        user_link_regex = /<@(U.*?)>/i
+        channnel_link_regex = /<#(C.*?)>/i
+        all_sequences_regex = /<(.*?)>/i
+        loop {
+          case text
+          when special_command_regex
+            text.gsub!(special_command_regex) {|w| "@#{$1}" }
+          when user_link_regex
+            text.gsub!(user_link_regex) {|w| "@#{user_info(id: "#{$1}")["name"]}" }
+          when channnel_link_regex
+            text.gsub!(channnel_link_regex) {|w| "##{channel_info(id: "#{$1}")["name"]}" }
+          when all_sequences_regex
+            text.gsub!(all_sequences_regex) {|w| "#{$1}" }
+          else
+            break
+          end
+        }
+        text
       end
 
       def username_of(message)
@@ -89,6 +103,16 @@ module Ruboty
 
       def user_info(args)
         users.select {|member|
+          args.keys.inject(true) {|m, i| m and member[i.to_s] == args[i] }
+        }.first
+      end
+
+      def channels
+        client.channels_list["channels"]
+      end
+
+      def channel_info(args)
+        channels.select {|member|
           args.keys.inject(true) {|m, i| m and member[i.to_s] == args[i] }
         }.first
       end
