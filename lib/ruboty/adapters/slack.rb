@@ -21,7 +21,8 @@ module Ruboty
           channel: message[:original][:channel],
           text: message[:code] ? "```\n#{message[:body]}\n```" : message[:body],
           username: username,
-          as_user: true
+          as_user: true,
+          parse: "full"
         )
         Ruboty.logger.debug("error: #{response["error"]}") unless response["ok"]
       end
