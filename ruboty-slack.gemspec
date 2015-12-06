@@ -17,7 +17,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "ruboty", ">= 1.0.4"
-  spec.add_dependency "xrc", ">= 0.1.8"
+  spec.add_dependency "slack-api", "~> 1.2.0"
+  spec.add_dependency "mem", "~> 0.1.5"
+
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
 end
